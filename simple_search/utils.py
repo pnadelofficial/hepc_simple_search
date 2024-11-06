@@ -14,10 +14,10 @@ def get_data():
         urllib.request.urlretrieve("https://tufts.box.com/shared/static/t9cpmf2e57cwz0rtkbjew4usnopg78rd.csv", "data/chunked_press_review.csv")
 
     if not os.listdir('indices'):
-        os.makedirs('indices/press_review_index', exist_ok=True)
+        # os.makedirs('indices/press_review_index', exist_ok=True)
         urllib.request.urlretrieve("https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "indices/hepc_index.zip")
         with ZipFile('indices/hepc_index.zip', 'r') as zip_ref:
-            zip_ref.extractall('press_review_index')
+            zip_ref.extractall('indices/press_review_index')
         
         print("**DEBUG**")
         print("Current Working Directory", os.getcwd())
