@@ -32,12 +32,15 @@ class Exporter:
             with searcher_object.ix.searcher():
                 searcher_object.limited_results = searcher_object.limit_results(searcher_object.results, searcher_object.dataloader.all_docs)
                 for r in searcher_object.limited_results:
-                    text = r['text'].replace("<br>", '')
+                    text = r['chunks'].replace("<br>", '')
                     self.pdf.set_font('DejaVu', 'B', 12)
-                    title = r['title'] if 'title' in r.keys() else r['filename']
+                    title = r['title']
+                    author = r['author']
+                    newspaper = r['newspaper']
                     self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Title: {title}", 0, ln=2)
-                    if (searcher_object.choice != 'national_archive_index') and ('date' in r.keys()): 
-                        self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Date: {datetime.strftime(r['date'], '%B %-d, %Y')}", 0, ln=2)
+                    self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Author: {author}", 0, ln=2)
+                    self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Date: {datetime.strftime(r['date'], '%B %-d, %Y')}", 0, ln=2)
+                    self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Newspaper: {newspaper}", 0, ln=2)
                     self.pdf.set_font('DejaVu', '', 14)
                     self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, text, 'B', ln=2)
                     self.pdf.ln(self.row_height * self.spacing)
@@ -45,17 +48,20 @@ class Exporter:
             page = st.session_state['pages'][st.session_state['page_count']]
             additional_context_dict = {}
             for i in range(len(page)):
-                if (page[i]['text'] != st.session_state['additional_context'][i]) and (not st.session_state['additional_context'][i] == ''):
+                if (page[i]['chunks'] != st.session_state['additional_context'][i]) and (not st.session_state['additional_context'][i] == ''):
                     additional_context_dict[i] = {'text':st.session_state['additional_context'][i]} | {k:page[i][k] for k in page[i].keys() if k != 'text'}
                 else:
                     additional_context_dict[i] = {k:page[i][k] for k in page[i].keys()}           
             for r in additional_context_dict.values():
                 text = r['text'].replace("<br>", '')
                 self.pdf.set_font('DejaVu', 'B', 12)
-                title = r['title'] if 'title' in r.keys() else r['filename']
+                title = r['title']
+                author = r['author']
+                newspaper = r['newspaper']
                 self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Title: {title}", 0, ln=2)
-                if (searcher_object.choice != 'national_archive_index') and ('date' in r.keys()): 
-                    self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Date: {datetime.strftime(r['date'], '%B %-d, %Y')}", 0, ln=2)
+                self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Author: {author}", 0, ln=2)
+                self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Date: {datetime.strftime(r['date'], '%B %-d, %Y')}", 0, ln=2)
+                self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, f"Newspaper: {newspaper}", 0, ln=2)
                 self.pdf.set_font('DejaVu', '', 14)
                 self.pdf.multi_cell(self.col_width, self.row_height*self.spacing, text, 'B', ln=2)
                 self.pdf.ln(self.row_height * self.spacing)
