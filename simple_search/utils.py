@@ -25,5 +25,7 @@ def get_data():
         print(os.listdir('indices'))
         print("hepc_index")
         print(os.listdir('indices/press_review_index'))
+        print("hepc_index/indices")
+        print(os.listdir('indices/press_review_index/indices'))
         print("data")
         print(os.listdir('data'))
