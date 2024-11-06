@@ -53,7 +53,7 @@ class Exporter:
                 else:
                     additional_context_dict[i] = {k:page[i][k] for k in page[i].keys()}           
             for r in additional_context_dict.values():
-                text = r['text'].replace("<br>", '')
+                text = r['chunks'].replace("<br>", '')
                 self.pdf.set_font('DejaVu', 'B', 12)
                 title = r['title']
                 author = r['author']
