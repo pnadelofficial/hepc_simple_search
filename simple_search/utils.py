@@ -16,3 +16,6 @@ def get_data():
         urllib.request.urlretrieve("https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "indices/hepc_index.zip")
         os.makedirs('press_review_index', exist_ok=True)
         os.system("unzip indices/hepc_index.zip -d press_review_index")
+        print(os.system("pwd"))
+        print(os.system("ls -la"))
+        print(os.system("ls -la press_review_index"))
