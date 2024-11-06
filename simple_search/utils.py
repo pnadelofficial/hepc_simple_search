@@ -17,3 +17,11 @@ def get_data():
         urllib.request.urlretrieve("https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "indices/hepc_index.zip")
         with ZipFile('indices/hepc_index.zip', 'r') as zip_ref:
             zip_ref.extractall('indices')
+        
+        print("**DEBUG**")
+        print("indices")
+        print(os.listdir('indices'))
+        print("hepc_index")
+        print(os.listdir('indices/press_review_index'))
+        print("data")
+        print(os.listdir('data'))
