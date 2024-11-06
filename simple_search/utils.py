@@ -1,5 +1,5 @@
 import streamlit as st
-import subprocess
+import urllib.request
 import os
 
 def reset_pages():
@@ -10,8 +10,9 @@ def get_data():
     os.makedirs('indices', exist_ok=True)
 
     if not os.listdir('data'):
-        subprocess.run(["wget", "https://tufts.box.com/shared/static/t9cpmf2e57cwz0rtkbjew4usnopg78rd.csv", "-O", "data/chunked_press_review.csv"])
+        urllib.request.urlretrieve("https://tufts.box.com/shared/static/t9cpmf2e57cwz0rtkbjew4usnopg78rd.csv", "data/chunked_press_review.csv")
 
     if not os.listdir('indices'):
-        subprocess.run(["wget", "https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "-O", "indices/hepc_index.zip"])
-        subprocess.run(["unzip", "indices/hepc_index.zip", "-d", "press_review_index"])
+        urllib.request.urlretrieve("https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "indices/hepc_index.zip")
+        os.makedirs('press_review_index', exist_ok=True)
+        os.system("unzip indices/hepc_index.zip -d press_review_index")
