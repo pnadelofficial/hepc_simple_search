@@ -18,6 +18,8 @@ def get_data():
         urllib.request.urlretrieve("https://tufts.box.com/shared/static/16rzcw8kmjlfyrhtkvbypqt4fh5ye8na.zip", "indices/hepc_index.zip")
         with ZipFile('indices/hepc_index.zip', 'r') as zip_ref:
             zip_ref.extractall('indices/press_review_index')
+        # copy the index files to the correct directory
+        os.rename('indices/press_review_index/indices/press_review_index', 'indices/press_review_index/')
         
         print("**DEBUG**")
         print("Current Working Directory", os.getcwd())
