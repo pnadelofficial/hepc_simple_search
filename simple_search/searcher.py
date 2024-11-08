@@ -38,7 +38,7 @@ class Searcher:
     def search(self, to_see):
         q, searches = self.parse_query()
         with self.ix.searcher() as searcher:
-            results = searcher.search(q, limit=None)
+            results = searcher.search(q, limit=None, sortedby="date")
             self.results = results
             default = 1
             
