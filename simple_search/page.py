@@ -42,7 +42,7 @@ class Page:
 
     def add_context(self, data, r, amount=1):
         sents = []
-        res_idx = int(data.loc[data.Text.str.contains(r['chunks'].strip(), regex=False, na=False)].index[0])
+        res_idx = int(data.loc[data.chunks.str.contains(r['chunks'].strip(), regex=False, na=False)].index[0])
         sents += list(data.iloc[res_idx-amount:res_idx].Text)
         sents += list(data.iloc[res_idx:res_idx+(amount+1)].Text)
         return '\n'.join(sents)
