@@ -2,9 +2,12 @@ import streamlit as st
 from string import punctuation
 import re
 from datetime import datetime
+from whoosh.searching import Results 
+import pandas as pd
+from typing import List
 
 class Page:
-    def __init__(self, results, data, searches, doc_search, display_date=True) -> None:
+    def __init__(self, results:Results, data:pd.DataFrame, searches:List, doc_search:List, display_date:bool=True) -> None:
         self.results = results
         self.data = data
         self.searches = searches
@@ -40,7 +43,7 @@ class Page:
             """ 
         return inject 
 
-    def add_context(self, data, r, amount=1):
+    def add_context(self, data:pd.DataFrame, r, amount=1):
         sents = []
         res_idx = int(data.loc[data.chunks.str.contains(r['chunks'].strip(), regex=False, na=False)].index[0])
         sents += list(data.iloc[res_idx-amount:res_idx].chunks)

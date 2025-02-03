@@ -4,7 +4,7 @@ import base64
 from datetime import datetime
 
 class Exporter:
-    def __init__(self, query_str, full=False):
+    def __init__(self, query_str:str, full:bool=False):
         self.query_str = query_str
         self.full = full
 
@@ -30,8 +30,7 @@ class Exporter:
     def fill_pdf(self, searcher_object):
         if self.full:
             with searcher_object.ix.searcher():
-                searcher_object.limited_results = searcher_object.limit_results(searcher_object.results, searcher_object.dataloader.all_docs)
-                for r in searcher_object.limited_results:
+                for r in searcher_object.results:
                     text = r['chunks'].replace("<br>", '')
                     self.pdf.set_font('DejaVu', 'B', 12)
                     title = r['title']

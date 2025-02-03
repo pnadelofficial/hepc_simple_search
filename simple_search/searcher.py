@@ -6,6 +6,7 @@ from datetime import datetime
 import gspread
 from simple_search.exporter import Exporter
 from simple_search.page import Page
+from simple_search.dataloader import DataLoader
 
 @st.cache_resource
 def load_google_sheet():
@@ -14,7 +15,7 @@ def load_google_sheet():
     return gc.open('simple-search-feedback').sheet1 # gmail account
 
 class Searcher:
-    def __init__(self, query_str, dataloader, stemmer, newspaper_type='All') -> None:
+    def __init__(self, query_str:str, dataloader:DataLoader, stemmer:bool, newspaper_type:str='All') -> None:
         self.query_str = query_str
         self.dataloader = dataloader
         self.data, self.ix, = self.dataloader.load()
