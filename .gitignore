@@ -163,4 +163,8 @@ cython_debug/
 /data
 /indices
 ingest.ipynb
+topic_model.ipynb
 /.streamlit
+ocr_output.json
+output.png
+*.zip
