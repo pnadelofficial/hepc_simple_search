@@ -1,7 +1,7 @@
 import streamlit as st
 from whoosh.qparser import QueryParser, query
 from whoosh.lang.morph_en import variations
-from whoosh.query import Term, And
+from whoosh.query import Term, And, Or
 from datetime import datetime
 import gspread
 from simple_search.exporter import Exporter
@@ -15,12 +15,13 @@ def load_google_sheet():
     return gc.open('simple-search-feedback').sheet1 # gmail account
 
 class Searcher:
-    def __init__(self, query_str:str, dataloader:DataLoader, stemmer:bool, newspaper_type:str='All') -> None:
+    def __init__(self, query_str:str, dataloader:DataLoader, stemmer:bool, newspaper_type:str='All', newspapers:list=[]) -> None:
         self.query_str = query_str
         self.dataloader = dataloader
         self.data, self.ix, = self.dataloader.load()
         self.stemmer = stemmer
         self.newspaper_type = newspaper_type
+        self.newspapers = newspapers
     
     def parse_query(self):
         if self.stemmer: 
@@ -34,6 +35,11 @@ class Searcher:
         if self.newspaper_type != 'All':
             type_query = Term('newspaper_type', self.newspaper_type)
             q = And([q, type_query])
+        
+        if len(self.newspapers) > 0:
+            newspaper_query = [Term('newspaper', newspaper) for newspaper in self.newspapers]
+            newspaper_query = Or(newspaper_query)
+            q = And([q, newspaper_query])
         return q, searches
 
     def search(self, to_see):

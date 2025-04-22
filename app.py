@@ -30,16 +30,21 @@ with st.expander('Click for further information on how to construct a query.'):
     """)
 
 newspaper_type = st.radio('Choose a newspaper type', ['All', 'Tabloids', 'Broadsheets'], on_change=reset_pages)
+
+dataloader = DataLoader()
+data, _ = dataloader.load()
+all_newspapers = data['Newspaper'].unique().tolist()
+newspapers = st.multiselect('Choose newspapers to restrict search to', all_newspapers, default=[], on_change=reset_pages)
+
 query_str = st.text_input('Search for a word or phrase', on_change=reset_pages)
 to_see = st.number_input('How many results would you like to see per page?', min_value=1, max_value=100, value=10, step=1)
 stemmer = st.toggle('Use stemming', help='If selected, the search will use stemming to find words with the same root. For example, "running" will match "run" and "ran".', on_change=reset_pages)
 
-
 if query_str != '':
-    dataloader = DataLoader()
     if newspaper_type == 'Tabloids':
         newspaper_type = 'tabloid'
     elif newspaper_type == 'Broadsheets':
         newspaper_type = 'broadsheet'
-    searcher = Searcher(query_str, dataloader, stemmer, newspaper_type=newspaper_type)
+
+    searcher = Searcher(query_str, dataloader, stemmer, newspaper_type=newspaper_type, newspapers=newspapers)
     searcher.search(to_see)

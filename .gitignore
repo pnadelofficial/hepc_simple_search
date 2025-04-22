@@ -165,6 +165,7 @@ cython_debug/
 ingest.ipynb
 topic_model.ipynb
 /.streamlit
-ocr_output.json
+*.json
 output.png
 *.zip
+*ipynb
