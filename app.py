@@ -1,5 +1,6 @@
 import streamlit as st
 import collections 
+import os
 
 from simple_search.searcher import Searcher
 from simple_search.dataloader import DataLoader
@@ -32,6 +33,18 @@ with st.expander('Click for further information on how to construct a query.'):
 newspaper_type = st.radio('Choose a newspaper type', ['All', 'Tabloids', 'Broadsheets'], on_change=reset_pages)
 
 dataloader = DataLoader()
+
+print("**DEBUG**")
+print("Current Working Directory", os.getcwd())
+print("indices")
+print(os.listdir('indices'))
+print("hepc_index")
+print(os.listdir('indices/press_review_index'))
+print("hepc_index/indices")
+print(os.listdir('indices/press_review_index/indices'))
+print("data")
+print(os.listdir('data'))
+
 data, _ = dataloader.load()
 all_newspapers = data['Newspaper'].unique().tolist()
 newspapers = st.multiselect('Choose newspapers to restrict search to', all_newspapers, default=[], on_change=reset_pages)
