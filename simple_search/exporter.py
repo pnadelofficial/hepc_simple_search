@@ -48,12 +48,8 @@ class Exporter:
             additional_context_dict = {}
             for i in range(len(page)):
                 if (page[i]['chunks'] != st.session_state['additional_context'][i]) or (not st.session_state['additional_context'][i] == ''):
-                    print("DEBUG: in additional context")
-                    print(st.session_state['additional_context'][i])
-                    print('--')
                     additional_context_dict[i] = {'text':st.session_state['additional_context'][i]} | {k:page[i][k] for k in page[i].keys() if k != 'text'} 
                 else:
-                    print("DEBUG: not in additional context")
                     additional_context_dict[i] = {k:page[i][k] for k in page[i].keys()}           
             for r in additional_context_dict.values():
                 text = r['text'].replace("<br>", '')
