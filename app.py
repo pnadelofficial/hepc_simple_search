@@ -1,6 +1,5 @@
 import streamlit as st
 import collections 
-import os
 
 from simple_search.searcher import Searcher
 from simple_search.dataloader import DataLoader
@@ -34,21 +33,10 @@ newspaper_type = st.radio('Choose a newspaper type', ['All', 'Tabloids', 'Broads
 
 dataloader = DataLoader()
 
-print("**DEBUG**")
-print("Current Working Directory", os.getcwd())
-print("indices")
-print(os.listdir('indices'))
-print("hepc_index")
-print(os.listdir('indices/press_review_index'))
-print("hepc_index/indices")
-print(os.listdir('indices/press_review_index/indices'))
-print("data")
-print(os.listdir('data'))
-
 data, _ = dataloader.load()
 all_newspapers = data['Newspaper'].unique().tolist()
 newspapers = st.multiselect('Choose newspapers to restrict search to', all_newspapers, default=[], on_change=reset_pages)
-
+default_context = st.number_input('How many sentences of context would you like to see by default?', min_value=0, max_value=10, value=0, step=1, help='This number represents the amount of sentences to be added before and after the result.', on_change=reset_pages)
 query_str = st.text_input('Search for a word or phrase', on_change=reset_pages)
 to_see = st.number_input('How many results would you like to see per page?', min_value=1, max_value=100, value=10, step=1)
 stemmer = st.toggle('Use stemming', help='If selected, the search will use stemming to find words with the same root. For example, "running" will match "run" and "ran".', on_change=reset_pages)
@@ -59,5 +47,5 @@ if query_str != '':
     elif newspaper_type == 'Broadsheets':
         newspaper_type = 'broadsheet'
 
-    searcher = Searcher(query_str, dataloader, stemmer, newspaper_type=newspaper_type, newspapers=newspapers)
+    searcher = Searcher(query_str, dataloader, stemmer, newspaper_type=newspaper_type, newspapers=newspapers, added_default_context=default_context)
     searcher.search(to_see)

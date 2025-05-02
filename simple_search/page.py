@@ -7,12 +7,13 @@ import pandas as pd
 from typing import List
 
 class Page:
-    def __init__(self, results:Results, data:pd.DataFrame, searches:List, doc_search:List, display_date:bool=True) -> None:
+    def __init__(self, results:Results, data:pd.DataFrame, searches:List, doc_search:List, display_date:bool=True, added_default_context:int=0) -> None:
         self.results = results
         self.data = data
         self.searches = searches
         self.doc_search = doc_search
         self.display_date = display_date
+        self.added_default_context = added_default_context
 
     def escape_markdown(self, text):
         '''Removes characters which have specific meanings in markdown'''
@@ -46,8 +47,10 @@ class Page:
     def add_context(self, data:pd.DataFrame, r, amount=1):
         sents = []
         res_idx = int(data.loc[data.chunks.str.contains(r['chunks'].strip(), regex=False, na=False)].index[0])
-        sents += list(data.iloc[res_idx-amount:res_idx].chunks)
-        sents += list(data.iloc[res_idx:res_idx+(amount+1)].chunks)
+        after_mask = (data.index >= res_idx) & (data.index < res_idx + amount + 1) & (data.Title == r['title'])
+        before_mask = (data.index < res_idx) & (data.index >= res_idx - amount) & (data.Title == r['title'])
+        sents += list(data.loc[before_mask, 'chunks'])
+        sents += list(data.loc[after_mask, 'chunks'])
         return '\n'.join(sents)
 
     def check_metadata(self, r, data, display_date):
@@ -79,9 +82,9 @@ class Page:
         else:
             st.markdown("<small><b>Newspaper: No newspaper found</b></small>", unsafe_allow_html=True)
 
-    def display_results(self, i, r, data, searches, display_date=True, text_return=True):
+    def display_results(self, i, r, data, searches, added_default_context=0, display_date=True, text_return=True):
         self.check_metadata(r, data, display_date)
-        full = r['chunks']
+        full = self.add_context(data, r, added_default_context)
         amount = st.number_input('Choose context length', key=f'num_{i}', value=1, step=1, help='This number represents the amount of sentences to be added before and after the result.')
         if st.button('Add context', key=f'con_{i}'):
             full = self.add_context(data, r, amount)
@@ -95,4 +98,4 @@ class Page:
     def __call__(self):
         for i, r in enumerate(self.results):
             if r['title'] in self.doc_search:
-                self.display_results(i, r, self.data, self.searches, display_date=self.display_date)
+                self.display_results(i, r, self.data, self.searches, self.added_default_context, display_date=self.display_date)

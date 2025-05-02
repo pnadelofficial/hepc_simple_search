@@ -11,7 +11,7 @@ def get_data():
     os.makedirs('indices', exist_ok=True)
 
     if not os.listdir('data'):
-        urllib.request.urlretrieve("https://tufts.box.com/shared/static/t9cpmf2e57cwz0rtkbjew4usnopg78rd.csv", "data/chunked_press_review.csv")
+        urllib.request.urlretrieve("https://tufts.box.com/shared/static/t9cpmf2e57cwz0rtkbjew4usnopg78rd.csv", "data/chunked_press_review.csv") # need to update
 
     if not os.listdir('indices'):
         # os.makedirs('indices/press_review_index', exist_ok=True)

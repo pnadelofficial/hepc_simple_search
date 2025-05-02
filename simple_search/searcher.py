@@ -15,13 +15,14 @@ def load_google_sheet():
     return gc.open('simple-search-feedback').sheet1 # gmail account
 
 class Searcher:
-    def __init__(self, query_str:str, dataloader:DataLoader, stemmer:bool, newspaper_type:str='All', newspapers:list=[]) -> None:
+    def __init__(self, query_str:str, dataloader:DataLoader, stemmer:bool, newspaper_type:str='All', newspapers:list=[], added_default_context:int=0) -> None:
         self.query_str = query_str
         self.dataloader = dataloader
         self.data, self.ix, = self.dataloader.load()
         self.stemmer = stemmer
         self.newspaper_type = newspaper_type
         self.newspapers = newspapers
+        self.added_default_context = added_default_context
     
     def parse_query(self):
         if self.stemmer: 
@@ -84,7 +85,7 @@ class Searcher:
                 pass
             else:
                 if len(doc_list) > 0:
-                    p = Page(st.session_state['pages'][st.session_state['page_count']], self.data, searches, doc_list)
+                    p = Page(st.session_state['pages'][st.session_state['page_count']], self.data, searches, doc_list, added_default_context=self.added_default_context)
                     p()
 
                     st.write(f"Page: {st.session_state['page_count']+1} out of {len(st.session_state['pages'])}")
