@@ -24,7 +24,7 @@ class Page:
     
     def no_punct(self, word):
         '''Util for below to remove punctuation'''
-        return ''.join([letter for letter in word if letter not in punctuation.replace('-', '') + '’' + '‘' + '“' + '”' + '—' + '…' + '–'])
+        return ''.join([letter for letter in word if letter not in punctuation.replace('-', '') + '’' + '‘' + '“' + '”' + '—' + '…' + '–' + '-']) 
     
     def no_digits(self, word):
         '''Util for below to remove digits'''
@@ -85,6 +85,12 @@ class Page:
     def display_results(self, i, r, data, searches, added_default_context=0, display_date=True, text_return=True):
         self.check_metadata(r, data, display_date)
         full = self.add_context(data, r, added_default_context)
+        if (st.session_state['additional_context'][i] == '') or (len(st.session_state['additional_context'][i]) < len(full)):
+            st.session_state['additional_context'][i] = full
+        # page[i]['chunks'] != st.session_state['additional_context'][i]
+        # print(f"**DEBUG**: {i} - {(st.session_state['pages'][st.session_state['page_count']][i]['chunks'] == st.session_state['additional_context'][i]) or (not st.session_state['additional_context'][i] == '')}")
+        # print(f"**DEBUG**: {i} - {st.session_state['additional_context'][i]}")
+        # print(f"**DEBUG**: {}")
         amount = st.number_input('Choose context length', key=f'num_{i}', value=1, step=1, help='This number represents the amount of sentences to be added before and after the result.')
         if st.button('Add context', key=f'con_{i}'):
             full = self.add_context(data, r, amount)

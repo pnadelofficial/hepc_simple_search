@@ -47,12 +47,16 @@ class Exporter:
             page = st.session_state['pages'][st.session_state['page_count']]
             additional_context_dict = {}
             for i in range(len(page)):
-                if (page[i]['chunks'] != st.session_state['additional_context'][i]) and (not st.session_state['additional_context'][i] == ''):
-                    additional_context_dict[i] = {'text':st.session_state['additional_context'][i]} | {k:page[i][k] for k in page[i].keys() if k != 'text'}
+                if (page[i]['chunks'] != st.session_state['additional_context'][i]) or (not st.session_state['additional_context'][i] == ''):
+                    print("DEBUG: in additional context")
+                    print(st.session_state['additional_context'][i])
+                    print('--')
+                    additional_context_dict[i] = {'text':st.session_state['additional_context'][i]} | {k:page[i][k] for k in page[i].keys() if k != 'text'} 
                 else:
+                    print("DEBUG: not in additional context")
                     additional_context_dict[i] = {k:page[i][k] for k in page[i].keys()}           
             for r in additional_context_dict.values():
-                text = r['chunks'].replace("<br>", '')
+                text = r['text'].replace("<br>", '')
                 self.pdf.set_font('DejaVu', 'B', 12)
                 title = r['title']
                 author = r['author']
